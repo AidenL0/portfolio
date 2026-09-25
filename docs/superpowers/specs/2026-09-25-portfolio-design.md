@@ -113,6 +113,13 @@ All values come from the approved mockup settings: **Look: Soft orbs · Movement
 - **Project tiles (spotlight):** a 220px radial glow follows the cursor (`--x`/`--y` custom properties), the border brightens to `rgba(127,224,212,.5)`, and a `↘` arrow slides in. There is no translate or tilt.
 - Focus-visible triggers the same effects as hover everywhere.
 
+### Pause motion control (WCAG 2.2.2)
+
+- A small `Pause motion` / `Play motion` button sits at the right of the nav, visible at every width. It stops and restarts the particle loop, the caustics and rays, and the event log.
+- The choice is remembered in `localStorage` and restored before first paint.
+- It is hidden when `prefers-reduced-motion: reduce` is set, since nothing moves then.
+- (Added after the final review: the motion runs indefinitely, and an OS setting alone does not satisfy WCAG 2.2.2.)
+
 ### Reduced motion (`prefers-reduced-motion: reduce`)
 
 - Particles: seed and draw exactly one static frame, with no loop, repel, or gather.

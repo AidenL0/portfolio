@@ -6,6 +6,7 @@
 
 <script>
   import { initialLogState, nextLine } from '../scripts/eventlog';
+  import { motionPaused } from '../scripts/motion';
 
   const INITIAL_LINES = 18;
   const MAX_LINES = 30;
@@ -28,7 +29,7 @@
     }).observe(box);
 
     window.setInterval(() => {
-      if (reduce.matches || !visible || document.visibilityState !== 'visible') return;
+      if (reduce.matches || motionPaused() || !visible || document.visibilityState !== 'visible') return;
       const line = document.createElement('div');
       line.textContent = nextLine(state);
       line.className = 'new';

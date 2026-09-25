@@ -48,3 +48,49 @@ test.describe('with reduced motion', () => {
     expect(await frames(page)).toBe(settled);
   });
 });
+
+test.describe('pause motion control', () => {
+  test('pauses the particles and CSS loops, then resumes them', async ({ page }) => {
+    await page.goto('/');
+    await page.getByRole('button', { name: 'Pause motion' }).click();
+    const play = page.getByRole('button', { name: 'Play motion' });
+    await expect(play).toBeVisible();
+    await page.waitForTimeout(100);
+    const paused = await frames(page);
+    await page.waitForTimeout(800);
+    expect(await frames(page)).toBe(paused);
+    await expect(page.locator('.caustics')).toHaveCSS('animation-play-state', 'paused');
+    await play.click();
+    await expect.poll(() => frames(page)).toBeGreaterThan(paused + 5);
+    await expect(page.locator('.caustics')).toHaveCSS('animation-play-state', 'running');
+  });
+
+  test('stops the event log from appending', async ({ page }) => {
+    await page.goto('/');
+    await page.getByRole('button', { name: 'Pause motion' }).click();
+    const lines = page.locator('#ticketing [data-eventlog-lines] > div');
+    await page.locator('#ticketing').scrollIntoViewIfNeeded();
+    await page.waitForTimeout(5000);
+    await expect(lines).toHaveCount(18);
+  });
+
+  test('remembers the choice across reloads', async ({ page }) => {
+    await page.goto('/');
+    await page.getByRole('button', { name: 'Pause motion' }).click();
+    await page.reload();
+    await expect(page.getByRole('button', { name: 'Play motion' })).toBeVisible();
+    await page.waitForTimeout(300);
+    const settled = await frames(page);
+    await page.waitForTimeout(800);
+    expect(await frames(page)).toBe(settled);
+  });
+});
+
+test.describe('pause control with reduced motion', () => {
+  test.use({ reducedMotion: 'reduce' });
+
+  test('is hidden, since nothing moves', async ({ page }) => {
+    await page.goto('/');
+    await expect(page.locator('[data-motion-toggle]')).toBeHidden();
+  });
+});

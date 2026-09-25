@@ -9,6 +9,7 @@ import {
   type Particle,
   type Point,
 } from './physics';
+import { MOTION_EVENT, motionPaused } from '../motion';
 
 const TOUCH_PULSE_MS = 600;
 
@@ -70,7 +71,7 @@ export function startField(canvas: HTMLCanvasElement, host: HTMLElement): void {
     canvas.dataset.gathering = 'true';
   }
 
-  const running = () => !reduce.matches && onScreen && document.visibilityState === 'visible';
+  const running = () => !reduce.matches && !motionPaused() && onScreen && document.visibilityState === 'visible';
 
   function tick(now: number) {
     raf = 0;
@@ -112,6 +113,7 @@ export function startField(canvas: HTMLCanvasElement, host: HTMLElement): void {
   }).observe(canvas);
   document.addEventListener('visibilitychange', resume);
   reduce.addEventListener('change', resume);
+  window.addEventListener(MOTION_EVENT, resume);
 
   host.addEventListener('pointermove', (e) => {
     if (e.pointerType === 'touch') return;

@@ -13,10 +13,13 @@ import { identity, projects } from '../data/site';
     <header class="top">
       <nav class="nav" aria-label="Primary">
         <span class="mark">{identity.name}</span>
-        <div class="nav-links">
-          <a href="#projects">Projects</a>
-          <a href="#about">About</a>
-          <a href="#contact">Contact</a>
+        <div class="nav-right">
+          <div class="nav-links">
+            <a href="#projects">Projects</a>
+            <a href="#about">About</a>
+            <a href="#contact">Contact</a>
+          </div>
+          <button class="motion-toggle" type="button" data-motion-toggle>Pause motion</button>
         </div>
       </nav>
     </header>
@@ -36,11 +39,14 @@ import { identity, projects } from '../data/site';
 <script>
   import { startField } from '../scripts/particles/field';
   import { trackSpotlight } from '../scripts/hover';
+  import { initMotionToggle } from '../scripts/motion';
 
   const canvas = document.querySelector<HTMLCanvasElement>('[data-field]');
   const host = document.querySelector<HTMLElement>('[data-site]');
   if (canvas && host) startField(canvas, host);
   trackSpotlight(document);
+  const toggle = document.querySelector<HTMLButtonElement>('[data-motion-toggle]');
+  if (toggle) initMotionToggle(toggle);
 </script>
 
 <style>
@@ -106,7 +112,21 @@ import { identity, projects } from '../data/site';
     letter-spacing: 0.06em;
   }
   .mark { font: italic 400 22px var(--serif); letter-spacing: 0; }
+  .nav-right { display: flex; align-items: center; gap: 22px; }
   .nav-links { display: flex; gap: 22px; }
+  .motion-toggle {
+    font: inherit;
+    letter-spacing: inherit;
+    color: var(--soft);
+    background: transparent;
+    border: 1px solid var(--hair);
+    border-radius: 99px;
+    padding: 4px 12px;
+    cursor: pointer;
+  }
+  .motion-toggle:hover { color: var(--accent); border-color: rgba(127, 224, 212, 0.5); }
+  :global([data-motion="paused"]) .caustics,
+  :global([data-motion="paused"]) .rays { animation-play-state: paused; }
   .nav-links a { text-decoration: none; color: var(--ink); }
   .nav-links a:hover { color: var(--accent); }
 
@@ -138,5 +158,6 @@ import { identity, projects } from '../data/site';
   }
   @media (prefers-reduced-motion: reduce) {
     .caustics, .rays { animation: none; }
+    .motion-toggle { display: none; }
   }
 </style>
