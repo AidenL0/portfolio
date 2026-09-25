@@ -31,6 +31,19 @@ test.describe('project cases', () => {
     }
   });
 
+  test('shows an optimized screenshot for every project instead of the placeholder', async ({ page }) => {
+    for (const [id, name] of [
+      ['ticketing', 'Event-sourced ticketing platform'],
+      ['la-esquina', 'La Esquina Taqueria'],
+      ['fourth-quarter', 'Fourth Quarter Cafe'],
+    ]) {
+      const img = page.locator(`#${id} img`);
+      await expect(img).toHaveAttribute('alt', `Screenshot of ${name}`);
+      await expect(img).toHaveAttribute('src', /.webp/);
+      await expect(page.locator(`#${id} .placeholder`)).toHaveCount(0);
+    }
+  });
+
   test('lists the stack as chips', async ({ page }) => {
     await expect(page.locator('#la-esquina li')).toHaveText(['Astro', 'Cloudflare Pages', 'Stripe']);
   });

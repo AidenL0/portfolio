@@ -1,4 +1,7 @@
 import type { ImageMetadata } from 'astro';
+import ticketingShot from '../assets/projects/ticketing.jpg';
+import laEsquinaShot from '../assets/projects/la-esquina.jpg';
+import fourthQuarterShot from '../assets/projects/fourth-quarter.jpg';
 
 export type Social = { label: string; handle: string; url: string };
 
@@ -54,6 +57,7 @@ export const projects: Project[] = [
       "A help desk that stores every state change as an append-only event, so any ticket's full history can be reconstructed. Built with government records compliance in mind.",
     stack: ['Next.js', 'TypeScript', 'PostgreSQL', 'Windows Server'],
     url: 'https://northwind-helpdesk.up.railway.app',
+    screenshot: ticketingShot,
     eventLog: true,
   },
   {
@@ -65,6 +69,7 @@ export const projects: Project[] = [
       'A fast, edge-deployed site for a family Mexican restaurant, with Stripe checkout and signature-verified payment webhooks.',
     stack: ['Astro', 'Cloudflare Pages', 'Stripe'],
     liveUrlEnv: 'LA_ESQUINA_URL',
+    screenshot: laEsquinaShot,
   },
   {
     id: 'fourth-quarter',
@@ -75,6 +80,7 @@ export const projects: Project[] = [
       'Menu, hours, gallery, and directions for a sports cafe serving smoothies, açaí bowls, and made-to-order food.',
     stack: ['Astro', 'Cloudflare Pages'],
     liveUrlEnv: 'FOURTH_QUARTER_URL',
+    screenshot: fourthQuarterShot,
   },
 ];
 
