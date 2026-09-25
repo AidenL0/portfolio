@@ -77,7 +77,7 @@ The page uses a single dark theme on purpose: it is an underwater scene, and the
 - **Display:** Instrument Serif (headline, nav name, project titles, section headings)
 - **Body/UI:** IBM Plex Sans 400/500/600
 - **Utility:** JetBrains Mono 400 (event log, small labels)
-- Fonts are self-hosted through Astro's font support, with no runtime requests to Google.
+- Fonts are self-hosted through the Fontsource npm packages (`@fontsource/instrument-serif`, `@fontsource/ibm-plex-sans`, `@fontsource/jetbrains-mono`), bundled by Astro, with no runtime requests to Google.
 
 ### Layout
 
@@ -99,7 +99,7 @@ All values come from the approved mockup settings: **Look: Soft orbs · Movement
 - **Rising:** each particle has a home point that rises at `.12 + z·.35` px/frame with a sine sway. When the home point passes above the top, the particle wraps to the bottom with a new random x. Particles fade out in the top 8% of the canvas.
 - **Spring:** velocity += (home − pos) · `k` per frame, with `k = .012`. Damping is `0.9` per frame.
 - **Cursor repel:** within 140px, push away with force `(1 − d/140) · 1.4 · (.5 + z)`. Repel is off while a gather attractor is active.
-- **Gather:** while a social link is hovered or focused, its center becomes an elliptical attractor with radii `(w/2 + 14, h/2 + 12)`. Using normalized distance `d`, particles with `d < 5` get pull `(d − 1) · −.35 · (1 − d/5)` plus a tangential swirl of `.05`, and their spring drops to `k = .0015`. The result is a slowly circling halo; releasing the link lets the particles spring home.
+- **Gather:** while a social link is hovered or focused, its center becomes an elliptical attractor with radii `(w/2 + 14, h/2 + 12)`. Using normalized distance `d`, particles with `d < 5` get pull `(d − 1) · −.35 · (1 − d/5)` plus a tangential swirl of `.05`, and they are marked *captured*: their spring drops to `k = 0` and their home point stops rising, so they settle on the ring (`d ≈ 1`) regardless of how far away home was. The result is a slowly circling halo. Releasing the link clears *captured*, and the normal spring (`k = .012`) brings each particle back to its home point, which never drifted away. (This amends the mockup, which used `k = .0015`; there, particles with distant homes stalled well outside the ring.)
 - **Touch:** on `pointerdown` on a social link (hover: none), run a 600ms gather pulse and then follow the link normally. The pulse never delays navigation.
 - **Frame loop:** use `requestAnimationFrame` with `dt` normalized to 60fps and capped at 3. The loop runs only while the canvas intersects the viewport and `document.visibilityState === 'visible'`.
 - **Resize:** a `ResizeObserver` re-seeds the field and caps the device pixel ratio at 2.
@@ -124,6 +124,7 @@ All values come from the approved mockup settings: **Look: Soft orbs · Movement
 - Every link has a visible 2px accent focus ring.
 - The canvas, event log, and decorative arrows use `aria-hidden="true"`.
 - Social links have accessible names like "GitHub, AidenL0".
+- All external links (socials, live project URLs) open in a new tab with `rel="noopener noreferrer"`. In-page links (nav, hub tiles) do not.
 - Text contrast meets WCAG AA against the darkest background behind it; `--soft` on `--deep` must be at least 4.5:1.
 - Heading order: `h1` is the headline, `h2` "Projects", and `h3` each project name.
 
