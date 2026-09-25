@@ -1,0 +1,50 @@
+@property --spot {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 0;
+}
+
+:root {
+  color-scheme: dark;
+  --deep: #02121a;
+  --mid: #073443;
+  --glow: #0f5d6e;
+  --abyss: #010a0f;
+  --ink: #dff4f2;
+  --soft: #8fbfc0;
+  --accent: #7fe0d4;
+  --glass-fill: rgba(170, 240, 235, 0.06);
+  --glass-line: rgba(170, 240, 235, 0.16);
+  --hair: rgba(170, 240, 235, 0.12);
+  --serif: "Instrument Serif", Georgia, serif;
+  --sans: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, Consolas, monospace;
+  --gutter: clamp(20px, 5vw, 64px);
+  --ease-out: cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { background: var(--abyss); scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: var(--abyss);
+  color: var(--ink);
+  font: 400 16px/1.6 var(--sans);
+  -webkit-font-smoothing: antialiased;
+}
+a { color: inherit; }
+img { max-width: 100%; height: auto; display: block; }
+ul[role="list"] { list-style: none; margin: 0; padding: 0; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+
+.eyebrow {
+  margin: 0;
+  font-size: 13px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}
