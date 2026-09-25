@@ -9,6 +9,7 @@ import { identity, projects } from '../data/site';
   <div class="site" data-site>
     <div class="caustics" aria-hidden="true"></div>
     <div class="rays" aria-hidden="true"></div>
+    <canvas class="field" aria-hidden="true" data-field></canvas>
     <header class="top">
       <nav class="nav" aria-label="Primary">
         <span class="mark">{identity.name}</span>
@@ -31,6 +32,16 @@ import { identity, projects } from '../data/site';
     </main>
   </div>
 </Base>
+
+<script>
+  import { startField } from '../scripts/particles/field';
+  import { trackSpotlight } from '../scripts/hover';
+
+  const canvas = document.querySelector<HTMLCanvasElement>('[data-field]');
+  const host = document.querySelector<HTMLElement>('[data-site]');
+  if (canvas && host) startField(canvas, host);
+  trackSpotlight(document);
+</script>
 
 <style>
   .site {
@@ -73,6 +84,14 @@ import { identity, projects } from '../data/site';
   @keyframes sway {
     from { transform: skewX(-4deg) translateX(-2%); }
     to { transform: skewX(4deg) translateX(2%); }
+  }
+  .field {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
   }
 
   .top, .main { position: relative; z-index: 1; }
