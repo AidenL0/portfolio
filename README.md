@@ -23,7 +23,7 @@ Everything visible lives in `src/data/site.ts`.
 ## Leak guard
 
 `tests/forbidden-terms.local.txt` (gitignored, never commit it) lists names that must never appear in
-this public repo, one per line. `npm test` fails if any appear in `src/` or `public/`.
+this public repo, one per line. `npm test` fails if any appear in any file git would publish (case- and accent-insensitive).
 Without that file the check is skipped; you'll see `1 skipped` in the test summary.
 
 ## Deploy

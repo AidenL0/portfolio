@@ -208,7 +208,7 @@ type Project = {
 **Unit (Vitest), `site.ts`:**
 - Exactly three socials, in order GitHub, LinkedIn, Handshake, with the URLs in §2.
 - Every project `url` is `https://` or absent. Project ids are unique.
-- Leak guard: the test reads forbidden terms (real business names, town, street) from `tests/forbidden-terms.local.txt`, one per line. That file is **gitignored** so the terms never enter the public repo. The test scans `src/` and `public/` text files (case-insensitive) and fails on any match. If the file is absent (for example in CI), the test is skipped with a warning.
+- Leak guard: the test reads forbidden terms (real business names, town, street) from `tests/forbidden-terms.local.txt`, one per line. That file is **gitignored** so the terms never enter the public repo. The test scans every text file git would publish (tracked plus new, non-ignored files; skipping the terms file, the lockfile, and binaries), ignoring case and accents, and fails on any match. If the file is absent (for example in CI), the test is skipped with a warning.
 
 **E2E (Playwright), against `astro preview`:**
 - The page loads with the `h1` headline visible.

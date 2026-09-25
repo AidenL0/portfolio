@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
-import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
-import { extname, join } from 'node:path';
+import { existsSync, readFileSync } from 'node:fs';
 import { identity, projects, socials } from '../../src/data/site';
+import { TERMS_FILE, findLeaks, repoTextFiles } from '../support/leak-guard';
 
 describe('identity', () => {
   it('uses the approved copy', () => {
@@ -52,37 +52,14 @@ describe('projects', () => {
   });
 });
 
-// Leak guard: real restaurant names, their town, and their street live only in a
-// gitignored file so they never enter this public repo.
-const TERMS_FILE = join(process.cwd(), 'tests/forbidden-terms.local.txt');
+// Leak guard: real restaurant names, their old hostnames, town, and street live only in a
+// gitignored file so they never enter this public repo. Scans every text file git would publish.
 const terms = existsSync(TERMS_FILE)
-  ? readFileSync(TERMS_FILE, 'utf8').split(/\r?\n/).map((t) => t.trim().toLowerCase()).filter(Boolean)
+  ? readFileSync(TERMS_FILE, 'utf8').split(/\r?\n/).map((t) => t.trim()).filter(Boolean)
   : [];
-const TEXT_EXT = new Set(['.ts', '.js', '.mjs', '.astro', '.css', '.json', '.md', '.svg', '.html', '.txt']);
-
-function* walk(dir: string): Generator<string> {
-  if (!existsSync(dir)) return;
-  for (const name of readdirSync(dir)) {
-    const full = join(dir, name);
-    if (statSync(full).isDirectory()) yield* walk(full);
-    else yield full;
-  }
-}
 
 describe('leak guard', () => {
-  if (terms.length === 0) {
-    console.warn('leak guard skipped: tests/forbidden-terms.local.txt not found or empty');
-  }
-
-  it.skipIf(terms.length === 0)('finds no forbidden term in src/ or public/', () => {
-    const hits: string[] = [];
-    for (const file of [...walk('src'), ...walk('public')]) {
-      if (!TEXT_EXT.has(extname(file))) continue;
-      const text = readFileSync(file, 'utf8').toLowerCase();
-      terms.forEach((term, i) => {
-        if (text.includes(term)) hits.push(`${file} contains forbidden term #${i + 1}`);
-      });
-    }
-    expect(hits).toEqual([]);
+  it.skipIf(terms.length === 0)('finds no forbidden term anywhere in the repo', () => {
+    expect(findLeaks(repoTextFiles(), terms)).toEqual([]);
   });
 });
