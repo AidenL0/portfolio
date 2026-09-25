@@ -1,0 +1,11 @@
+node_modules/
+dist/
+.astro/
+.env
+.env.*
+.wrangler/
+test-results/
+playwright-report/
+
+# Real restaurant names used by the leak-guard test; must never be committed.
+tests/forbidden-terms.local.txt
