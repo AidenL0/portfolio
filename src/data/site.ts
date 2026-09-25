@@ -16,6 +16,13 @@ export type Project = {
   stack: string[];
   /** Live URL. Leave unset until the site is live; the page then shows "Live link coming soon". */
   url?: string;
+  /**
+   * Name of an env var (set in Cloudflare Pages) holding the live URL. Use it when the URL must stay out of
+   * this public repo; the card then shows "View live site" instead of the hostname.
+   */
+  liveUrlEnv?: string;
+  /** Set by withLiveUrls: show a neutral label instead of the hostname. */
+  hideHost?: boolean;
   /** Import from src/assets/projects/. Leave unset to show the styled placeholder. */
   screenshot?: ImageMetadata;
   /** Show the faint event-log strip behind this case study. */
@@ -57,6 +64,7 @@ export const projects: Project[] = [
     description:
       'A fast, edge-deployed site for a family Mexican restaurant, with Stripe checkout and signature-verified payment webhooks.',
     stack: ['Astro', 'Cloudflare Pages', 'Stripe'],
+    liveUrlEnv: 'LA_ESQUINA_URL',
   },
   {
     id: 'fourth-quarter',
@@ -66,5 +74,21 @@ export const projects: Project[] = [
     description:
       'Menu, hours, gallery, and directions for a sports cafe serving smoothies, açaí bowls, and made-to-order food.',
     stack: ['Astro', 'Cloudflare Pages'],
+    liveUrlEnv: 'FOURTH_QUARTER_URL',
   },
 ];
+
+/** Returns copies of the projects with `url` filled from their `liveUrlEnv` variable, when it holds an https URL. */
+export function withLiveUrls(list: Project[], env: Record<string, string | undefined>): Project[] {
+  return list.map((p) => {
+    if (!p.liveUrlEnv) return p;
+    const raw = env[p.liveUrlEnv]?.trim();
+    if (!raw) return { ...p };
+    try {
+      if (new URL(raw).protocol !== 'https:') return { ...p };
+    } catch {
+      return { ...p };
+    }
+    return { ...p, url: raw, hideHost: true };
+  });
+}

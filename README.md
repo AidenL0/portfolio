@@ -8,6 +8,10 @@ Everything visible lives in `src/data/site.ts`.
 
 - **Add a project:** append an entry to `projects`. It gets a hub tile and a case study automatically.
 - **A project goes live:** set its `url`. Until then the page shows "Live link coming soon".
+- **A URL that must stay out of this public repo** (the two restaurant sites): the project names an env var in
+  `liveUrlEnv`. Set `LA_ESQUINA_URL` and `FOURTH_QUARTER_URL` in Cloudflare Pages → Settings → Environment
+  variables (https only), then redeploy. The card shows "View live site" instead of the hostname. To preview locally:
+  `LA_ESQUINA_URL=https://... npm run build && npm run preview`.
 - **Add a screenshot:** put the image in `src/assets/projects/`, then in `site.ts` add
   `import shot from '../assets/projects/<file>.png';` and set `screenshot: shot` on the project.
 

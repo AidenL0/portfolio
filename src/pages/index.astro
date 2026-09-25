@@ -3,7 +3,8 @@ import Base from '../layouts/Base.astro';
 import Hero from '../components/Hero.astro';
 import LinkHub from '../components/LinkHub.astro';
 import ProjectCase from '../components/ProjectCase.astro';
-import { identity, projects } from '../data/site';
+import { identity } from '../data/site';
+import { liveProjects } from '../data/live';
 ---
 <Base title={identity.pageTitle} description={identity.lede}>
   <div class="site" data-site>
@@ -30,7 +31,7 @@ import { identity, projects } from '../data/site';
       </div>
       <section class="work" id="projects" aria-labelledby="projects-heading">
         <h2 class="work-head" id="projects-heading">Projects</h2>
-        {projects.map((project, i) => <ProjectCase project={project} flip={i % 2 === 1} />)}
+        {liveProjects.map((project, i) => <ProjectCase project={project} flip={i % 2 === 1} />)}
       </section>
     </main>
   </div>

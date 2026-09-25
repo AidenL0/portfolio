@@ -9,7 +9,7 @@ interface Props {
 }
 
 const { project, flip = false } = Astro.props;
-const host = project.url ? new URL(project.url).host : null;
+const linkLabel = project.url ? (project.hideHost ? 'View live site' : new URL(project.url).host) : null;
 ---
 <article class:list={['case', { flip }]} id={project.id} aria-labelledby={`${project.id}-title`}>
   {project.eventLog && <EventLog />}
@@ -33,7 +33,7 @@ const host = project.url ? new URL(project.url).host : null;
     </ul>
     {project.url ? (
       <a class="go" href={project.url} target="_blank" rel="noopener noreferrer">
-        {host} <span aria-hidden="true">→</span>
+        {linkLabel} <span aria-hidden="true">→</span>
       </a>
     ) : (
       <p class="go pending">Live link coming soon</p>
