@@ -1,5 +1,6 @@
 ---
 import { Image } from 'astro:assets';
+import EventLog from './EventLog.astro';
 import type { Project } from '../data/site';
 
 interface Props {
@@ -11,6 +12,7 @@ const { project, flip = false } = Astro.props;
 const host = project.url ? new URL(project.url).host : null;
 ---
 <article class:list={['case', { flip }]} id={project.id} aria-labelledby={`${project.id}-title`}>
+  {project.eventLog && <EventLog />}
   {project.screenshot ? (
     <Image
       class="shot"
